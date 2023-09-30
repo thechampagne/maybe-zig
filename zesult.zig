@@ -40,6 +40,13 @@ pub fn Option(comptime T: type) type {
                 else => @panic(msg)
             }
         }
+
+        pub fn unwrap(self: Self) T {
+            switch(self) {
+                .some => |v| return v,
+                else => @panic("called `Option.unwrap()` on a `none` value")
+            }
+        }
         
     };
 }
@@ -80,4 +87,9 @@ test "isNone" {
 test "expect" {
     const a: Option([]const u8) = .{ .some = "value"};
     try @import("std").testing.expectEqual(a.expect("fruits are healthy"), "value");
+}
+
+test "unwrap" {
+    const a: Option([]const u8) = .{ .some = "air"};
+    try @import("std").testing.expectEqual(a.unwrap(), "air");
 }
