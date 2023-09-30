@@ -54,6 +54,13 @@ pub fn Option(comptime T: type) type {
                 else => return default
             }
         }
+
+        pub fn unwrapOrElse(self: Self, f: *const fn() T) T {
+            switch(self) {
+                .some => |v| return v,
+                else => return f()
+            }
+        }
         
     };
 }
@@ -103,5 +110,18 @@ test "unwrap" {
 
 test "unwrapOr" {
     try @import("std").testing.expectEqual(Option([]const u8).Some("car").unwrapOr("bike"), "car");
+    
     try @import("std").testing.expectEqual(Option([]const u8).None().unwrapOr("bike"), "bike");
+}
+
+test "unwrapOrElse" {
+    const function = struct {
+        fn predicate() u32 {
+            return 2 * 10;
+        }
+    };
+    
+    try @import("std").testing.expectEqual(Option(u32).Some(4).unwrapOrElse(function.predicate), 4);
+
+    try @import("std").testing.expectEqual(Option(u32).None().unwrapOrElse(function.predicate), 20);
 }
