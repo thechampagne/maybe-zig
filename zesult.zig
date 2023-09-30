@@ -1,7 +1,7 @@
 pub fn Option(comptime T: type) type {
     return union(enum) {
-        none,
         some: T,
+        none,
 
         const Self = @This();
 
@@ -23,6 +23,13 @@ pub fn Option(comptime T: type) type {
         pub fn isSomeAnd(self: Self, f: *const fn(T) bool) bool {
             switch(self) {
                 .some => |v| return f(v),
+                else => return false
+            }
+        }
+
+        pub fn isNone(self: Self) bool {
+            switch(self) {
+                .none => return true,
                 else => return false
             }
         }
@@ -53,4 +60,12 @@ test "isSomeAnd" {
 
     const c: Option(u32) = .{ .none = {}};
     try @import("std").testing.expectEqual(c.isSomeAnd(function.predicate), false);
+}
+
+test "isNone" {
+    const a: Option(u32) = .{ .some = 2};
+    try @import("std").testing.expectEqual(a.isNone(), false);
+    
+    const b: Option(u32) = .{ .none = {}};
+    try @import("std").testing.expectEqual(b.isNone(), true);
 }
