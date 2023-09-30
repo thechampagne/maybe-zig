@@ -33,6 +33,13 @@ pub fn Option(comptime T: type) type {
                 else => return false
             }
         }
+
+        pub fn expect(self: Self, msg: []const u8) T {
+            switch(self) {
+                .some => |v| return v,
+                else => @panic(msg)
+            }
+        }
         
     };
 }
@@ -68,4 +75,9 @@ test "isNone" {
     
     const b: Option(u32) = .{ .none = {}};
     try @import("std").testing.expectEqual(b.isNone(), true);
+}
+
+test "expect" {
+    const a: Option([]const u8) = .{ .some = "value"};
+    try @import("std").testing.expectEqual(a.expect("fruits are healthy"), "value");
 }
