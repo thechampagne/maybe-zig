@@ -72,7 +72,14 @@ pub fn Option(comptime T: type) type {
                 else => return Option(U).None()
             }
         }
-        
+
+        pub fn inspect(self: *const Self, f: *const fn(*const T) void) Self {
+            switch(self.*) {
+                .some => |*v| f(v),
+                else => {}
+            }
+            return self.*;
+        }
     };
 }
 
@@ -154,4 +161,16 @@ test "map" {
 
     const b: Option([]const u8) = .{ .none = {}};
     try @import("std").testing.expectEqual(b.map(usize, function.map), Option(usize).None());
+}
+
+test "inspect" {
+    const function = struct {
+        fn inspect(x: *const u32) void {
+            @import("std").debug.print("got: {}\n", .{x.*});
+        }
+    };
+
+    _ = Option(u32).Some(4).inspect(function.inspect);
+
+    _ = Option(u32).None().inspect(function.inspect);
 }
