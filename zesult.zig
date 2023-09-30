@@ -61,6 +61,17 @@ pub fn Option(comptime T: type) type {
                 else => return f()
             }
         }
+
+        pub fn unwrapUnchecked(self: Self) T {
+            return self.some;
+        }
+
+        pub fn map(self: Self, U: anytype, f: *const fn(T) U) Option(U) {
+            switch(self) {
+                .some => |v| return Option(U).Some(f(v)),
+                else => return Option(U).None()
+            }
+        }
         
     };
 }
@@ -124,4 +135,23 @@ test "unwrapOrElse" {
     try @import("std").testing.expectEqual(Option(u32).Some(4).unwrapOrElse(function.predicate), 4);
 
     try @import("std").testing.expectEqual(Option(u32).None().unwrapOrElse(function.predicate), 20);
+}
+
+test "unwrapUnchecked" {
+    const a: Option([]const u8) = .{ .some = "air"};
+    try @import("std").testing.expectEqual(a.unwrapUnchecked(), "air");
+}
+
+test "map" {
+    const function = struct {
+        fn map(x: []const u8) usize {
+            return x.len;
+        }
+    };
+
+    const a: Option([]const u8) = .{ .some = "Hello, World!"};
+    try @import("std").testing.expectEqual(a.map(usize, function.map), Option(usize).Some(13));
+
+    const b: Option([]const u8) = .{ .none = {}};
+    try @import("std").testing.expectEqual(b.map(usize, function.map), Option(usize).None());
 }
