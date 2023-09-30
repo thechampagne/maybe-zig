@@ -127,14 +127,14 @@ test "unwrapOr" {
 
 test "unwrapOrElse" {
     const function = struct {
-        fn predicate() u32 {
+        fn orElse() u32 {
             return 2 * 10;
         }
     };
     
-    try @import("std").testing.expectEqual(Option(u32).Some(4).unwrapOrElse(function.predicate), 4);
+    try @import("std").testing.expectEqual(Option(u32).Some(4).unwrapOrElse(function.orElse), 4);
 
-    try @import("std").testing.expectEqual(Option(u32).None().unwrapOrElse(function.predicate), 20);
+    try @import("std").testing.expectEqual(Option(u32).None().unwrapOrElse(function.orElse), 20);
 }
 
 test "unwrapUnchecked" {
