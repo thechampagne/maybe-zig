@@ -80,6 +80,20 @@ pub fn Option(comptime T: type) type {
             }
             return self.*;
         }
+
+        pub fn mapOr(self: Self, U: anytype, default: U, f: *const fn(T) U) U {
+            switch(self) {
+                .some => |v| return f(v),
+                else => return default
+            }
+        }
+
+        pub fn mapOrElse(self: Self, U: anytype, default: *const fn() U, f: *const fn(T) U) U {
+            switch(self) {
+                .some => |v| return f(v),
+                else => return default()
+            }
+        }
     };
 }
 
