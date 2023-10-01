@@ -94,6 +94,13 @@ pub fn Option(comptime T: type) type {
                 else => return default()
             }
         }
+
+        pub fn @"and"(self: Self, U: anytype, optb: Option(U)) Option(U) {
+            switch(self) {
+                .some => optb,
+                else => return optb.None()
+            }
+        }
     };
 }
 
