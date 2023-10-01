@@ -101,6 +101,13 @@ pub fn Option(comptime T: type) type {
                 else => return optb.None()
             }
         }
+
+        pub fn andThen(self: Self, U: anytype, f: *const fn(T) Option(U)) Option(U) {
+            switch(self) {
+                .some => |v| return f(v),
+                else => return Option(U).None()
+            }
+        }
     };
 }
 
