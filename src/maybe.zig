@@ -125,7 +125,7 @@ pub fn Option(comptime T: type) type {
 
         pub fn orElse(self: Self, f: *const fn() Option(T)) Option(T) {
             switch(self) {
-                .some => self,
+                .some => return self,
                 else => return f()
             }
         }
