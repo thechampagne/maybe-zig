@@ -97,8 +97,8 @@ pub fn Option(comptime T: type) type {
 
         pub fn @"and"(self: Self, U: anytype, optb: Option(U)) Option(U) {
             switch(self) {
-                .some => optb,
-                else => return optb.None()
+                .some => return optb,
+                else => return Option(U).None()
             }
         }
 
