@@ -115,6 +115,20 @@ pub fn Option(comptime T: type) type {
                 else => return self.*
             }
         }
+
+        pub fn @"or"(self: Self, optb: Option(T)) Option(T) {
+            switch(self) {
+                .some => self,
+                else => return optb
+            }
+        }
+
+        pub fn orElse(self: Self, f: *const fn() Option(T)) Option(T) {
+            switch(self) {
+                .some => self,
+                else => return f()
+            }
+        }
     };
 }
 
