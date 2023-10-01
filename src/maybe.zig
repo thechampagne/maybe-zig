@@ -118,7 +118,7 @@ pub fn Option(comptime T: type) type {
 
         pub fn @"or"(self: Self, optb: Option(T)) Option(T) {
             switch(self) {
-                .some => self,
+                .some => return self,
                 else => return optb
             }
         }
