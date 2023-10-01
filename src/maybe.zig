@@ -111,7 +111,7 @@ pub fn Option(comptime T: type) type {
 
         pub fn filter(self: *const Self, f: *const fn(*const T) bool) Self {
             switch(self.*) {
-                .some => |*v| if (f(v)) return self.* else self.None(),
+                .some => |*v| if (f(v)) return self.* else return Self.None(),
                 else => return self.*
             }
         }
