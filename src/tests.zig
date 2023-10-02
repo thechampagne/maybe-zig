@@ -225,3 +225,29 @@ test "orElse" {
 
     try @import("std").testing.expectEqual(Option([]const u8).None().orElse(function.nobody), Option([]const u8).None());
 }
+
+test "xor" {
+    {
+        const a = Option(u32).Some(2);
+        const b = Option(u32).None();
+        try @import("std").testing.expectEqual(a.xor(b), Option(u32).Some(2));
+    }
+
+    {
+        const a = Option(u32).None();
+        const b =  Option(u32).Some(2);
+        try @import("std").testing.expectEqual(a.xor(b), Option(u32).Some(2));
+    }
+
+    {
+        const a = Option(u32).Some(2);
+        const b =  Option(u32).Some(2);
+        try @import("std").testing.expectEqual(a.xor(b), Option(u32).None());
+    }
+
+    {
+        const a = Option(u32).None();
+        const b =  Option(u32).None();
+        try @import("std").testing.expectEqual(a.xor(b), Option(u32).None());
+    }
+}

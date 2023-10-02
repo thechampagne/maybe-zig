@@ -129,5 +129,13 @@ pub fn Option(comptime T: type) type {
                 else => return f()
             }
         }
+
+        pub fn xor(self: Self, optb: Option(T)) Option(T) {
+            if (self.isSome() and optb.isNone()) {
+                return self;
+            } else if (self.isNone() and optb.isSome()) {
+                return optb;
+            } else return Self.None();
+        }
     };
 }
